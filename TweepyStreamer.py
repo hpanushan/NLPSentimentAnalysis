@@ -1,6 +1,7 @@
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
+from StoringMySQL import storeMYSQL
 import json
 
 import Credentials
@@ -8,8 +9,8 @@ import Credentials
 class StdOutListener(StreamListener):
 
     def on_data(self, data):
-        dictData = json.loads(data)
-        print(dictData['id'])
+        dictData = json.loads(data)     # Convert string into dictionary
+        storeMYSQL(dictData)
         return True
     
     def on_error(self, status):
@@ -22,4 +23,4 @@ if __name__ == "__main__":
 
     stream = Stream(auth, listener)
     ## Filtering the tweets
-    stream.filter(track = ["donald"])
+    stream.filter(track = ["donald trump"])
