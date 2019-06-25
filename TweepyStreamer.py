@@ -10,7 +10,7 @@ class StdOutListener(StreamListener):
 
     def on_data(self, data):
         dictData = json.loads(data)                 # Convert string into dictionary
-        storeMYSQL(dictData)             # Adding data to MySQL database
+        storeMYSQL(dictData)                        # Adding data to MySQL database
         return True
     
     def on_error(self, status):
