@@ -32,41 +32,44 @@ class TwitterClient(object):
 
     def getTweetws(self, query, count):
         # Main function to fetch tweets and parse
+        
+        # Empty list to store parsed tweets
+        tweets = []
+
         try:
             # call twitter api to fetch tweets 
-            fetched_tweet = self.api.search(q = query, count=count) 
-            
-            if len(fetched_tweet)==1:
-            
+            fetched_tweets = self.api.search(q = query, count=count) 
+  
+            # parsing tweets one by one 
+            for tweet in fetched_tweets: 
+                # empty dictionary to store required params of a tweet 
                 parsed_tweet = {}
-
+  
                 # saving text of tweet 
-                parsed_tweet['id'] = fetched_tweet[0].id
-                parsed_tweet['text'] = fetched_tweet[0].text 
-                parsed_tweet['followers_count'] = fetched_tweet[0].user.followers_count
-                
-                return parsed_tweet 
-            else: pass
-            # return parsed tweets
+                parsed_tweet['text'] = tweet.text 
+  
+                # appending parsed tweet to tweets list 
+                if tweet.retweet_count > 0: 
+                    # if tweet has retweets, ensure that it is appended only once 
+                    if parsed_tweet not in tweets: 
+                        tweets.append(parsed_tweet) 
+                else: 
+                    tweets.append(parsed_tweet) 
+  
+            # return parsed tweets 
+            return tweets 
         
         except tweepy.TweepError as e: 
             # print error (if any) 
             print("Error : " + str(e)) 
 
-
 def main():
 # creating object of TwitterClient Class 
     api = TwitterClient() 
     # calling function to get tweets 
-    prevTweet = {}
-    while (True):
-        tweet = api.getTweetws(query = 'microsoft',count=1) 
-        if (prevTweet==tweet): pass
-        else:
-            prevTweet = tweet
-            print(tweet) 
+    tweets = api.getTweetws(query = 'trumph', count=100) 
+    return tweets
 
 if __name__ == "__main__": 
     # calling main function 
-    main()
-    
+    print(main()[50])
