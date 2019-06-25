@@ -32,7 +32,6 @@ class TwitterClient(object):
 
     def getTweetws(self, query, count):
         # Main function to fetch tweets and parse
-
         try:
             # call twitter api to fetch tweets 
             fetched_tweet = self.api.search(q = query, count=count) 
@@ -45,23 +44,29 @@ class TwitterClient(object):
                 parsed_tweet['id'] = fetched_tweet[0].id
                 parsed_tweet['text'] = fetched_tweet[0].text 
                 parsed_tweet['followers_count'] = fetched_tweet[0].user.followers_count
-  
+                
+                return parsed_tweet 
             else: pass
-            # return parsed tweets 
-            return parsed_tweet 
+            # return parsed tweets
         
         except tweepy.TweepError as e: 
             # print error (if any) 
             print("Error : " + str(e)) 
 
+
 def main():
 # creating object of TwitterClient Class 
     api = TwitterClient() 
     # calling function to get tweets 
-    tweet = api.getTweetws(query = 'microsoft',count=1) 
-    return tweet
+    prevTweet = {}
+    while (True):
+        tweet = api.getTweetws(query = 'microsoft',count=1) 
+        if (prevTweet==tweet): pass
+        else:
+            prevTweet = tweet
+            print(tweet) 
 
 if __name__ == "__main__": 
     # calling main function 
-    print(main())
+    main()
     
