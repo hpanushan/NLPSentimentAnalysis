@@ -16,11 +16,10 @@ class StdOutListener(StreamListener):
     def on_error(self, status):
         print(status)
 
-if __name__ == "__main__":
-    listener = StdOutListener()
-    auth = OAuthHandler(Credentials.CONSUMER_KEY, Credentials.CONSUMER_KEY_SECRET)
-    auth.set_access_token(Credentials.ACCESS_TOKEN, Credentials.ACCESS_TOKEN_SECRET)
+    def streamer(self):
+        auth = OAuthHandler(Credentials.CONSUMER_KEY, Credentials.CONSUMER_KEY_SECRET)
+        auth.set_access_token(Credentials.ACCESS_TOKEN, Credentials.ACCESS_TOKEN_SECRET)
 
-    stream = Stream(auth, listener)
-    ## Filtering the tweets
-    stream.filter(track = ["donald trump"])
+        stream = Stream(auth, self)
+        ## Filtering the tweets
+        stream.filter(track = ["donald trump"])

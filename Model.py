@@ -11,6 +11,15 @@ class Model(object):
     def __init__(self):
         pass
 
+    def getTweets(self, conn, cursor):
+        # Main function to fetch tweets into MySQL database
+        try:
+            record = cursor.fetchone()
+            return record
+        except tweepy.TweepError as e: 
+            # print error (if any) 
+            print("Error : " + str(e)) 
+
     def cleanTweet(self,tweet):
         # Removing links and mentions in tweet text 
         return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t]) |(\w+:\/\/\S+)", " ", tweet).split())
@@ -26,22 +35,13 @@ class Model(object):
         else: 
             return 'negative'
 
-    def getTweets(self, conn, cursor):
-        # Main function to fetch tweets into MySQL database
-        try:
-            record = cursor.fetchone()
-            return record
-        except tweepy.TweepError as e: 
-            # print error (if any) 
-            print("Error : " + str(e)) 
-
     def storeSentimentMYSQL(self,conn,row):
         try:
             #column values of new table
-            user_id = row[3]
-            user_name = row[4]
-            tweet_id = row[1]
-            text = row[2]
+            user_id = row[1]
+            user_name = row[2]
+            tweet_id = row[3]
+            text = row[4]
             sentiment = self.getTweetSentiment(text)
 
             sql_insert_query = """ INSERT INTO `sentiment` (`user_id`, `user_name`, `tweet_id`, `text`, `sentiment`) VALUES ("{}","{}","{}","{}","{}")""".format(user_id,user_name,tweet_id,text,sentiment)
@@ -54,26 +54,4 @@ class Model(object):
         finally:
             #closing database connection.
             if(conn.is_connected()):
-                
                 pass
-
-def main():
-# creating object of TwitterClient Class 
-    api = Model() 
-    conn = mysql.connector.connect(host='localhost', database='nlp', user='root', password='root')
-    sql_Query = "select * from tweets"
-    cursor = conn.cursor(buffered=True)
-    cursor.execute(sql_Query)
-    
-    for i in range(1,301):
-        row = api.getTweets(conn,cursor)
-        api.storeSentimentMYSQL(conn,row)
-        print("Record is entered successfully")
-    
-    # closing the connection
-    cursor.close()
-    conn.close()
-
-if __name__ == "__main__": 
-    # calling main function 
-    main() 
