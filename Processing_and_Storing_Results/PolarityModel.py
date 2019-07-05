@@ -5,7 +5,7 @@ from textblob import TextBlob
 import mysql.connector
 from mysql.connector import Error
 
-class Model(object):
+class PolarityModel(object):
     # Twitter class for sentiment analysis
 
     def __init__(self):

@@ -9,11 +9,11 @@ def storeMYSQL(dictData):
         cursor = connection.cursor()
         cursor.execute(sql_insert_query)
         connection.commit()
-        print ("Record inserted successfully into python_users table")
+        print ("Record inserted successfully")
 
     except mysql.connector.Error as error :
         connection.rollback() #rollback if any exception occured
-        print("Failed inserting record into python_users table {}".format(error))
+        print("Failed inserting record with {}".format(error))
         
     finally:
         #closing database connection.
